@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: pix54321
+      POSTGRES_DB: pix-service
+    volumes:
+      - ./docker/sql/create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql
