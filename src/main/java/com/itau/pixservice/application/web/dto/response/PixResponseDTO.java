@@ -22,5 +22,5 @@ public class PixResponseDTO {
     private String nomeCorrentista;
     private String sobrenomeCorrentista;
     private LocalDateTime datahoraInclusao;
-    private LocalDateTime datahorainativacao;
+    private LocalDateTime datahoraInativacao;
 }

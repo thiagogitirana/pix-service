@@ -30,6 +30,11 @@ public class PixService {
         return clientRepository.save(client);
     }
 
+    @Transactional
+    public PixResponse remove(String id){
+        return pixKeyRepository.remove(id);
+    }
+
     public PixResponse findById(String pixKeyId){
         return pixKeyRepository.findById(pixKeyId);
     }

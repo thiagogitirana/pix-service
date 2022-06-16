@@ -33,9 +33,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public List<PixResponse> save(Client client) {
-        ClientJpa clientJpa = null;
-
-        clientJpa = clientAdapter.toJpa(client);
+        ClientJpa clientJpa = clientAdapter.toJpa(client);
 
         clientJpa = clientRepositoryJpa.save(clientJpa);
 

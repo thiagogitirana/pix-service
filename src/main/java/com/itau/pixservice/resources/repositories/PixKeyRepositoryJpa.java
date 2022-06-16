@@ -21,4 +21,6 @@ public interface PixKeyRepositoryJpa  extends JpaRepository<PixKeyJpa, Integer> 
             "where pk.pix_key_id = (?1)", nativeQuery = true)
     Optional<PixKeyJpa> findBypixKeyId(UUID pixKeyId);
 
+    void deleteByPixKeyId(UUID pixKeyId);
+
 }

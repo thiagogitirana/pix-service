@@ -2,6 +2,7 @@ package com.itau.pixservice.resources.repositories.adapters;
 
 import com.itau.pixservice.domain.entities.PixKey;
 import com.itau.pixservice.domain.entities.PixResponse;
+import com.itau.pixservice.domain.entities.enums.Status;
 import com.itau.pixservice.resources.repositories.entities.AccountJpa;
 import com.itau.pixservice.resources.repositories.entities.PixKeyJpa;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class PixKeyAdapter {
         pixKeyJpa.setKeyType(keyTypeAdapter.toJpa(pixKey.getKeyType()));
         pixKeyJpa.setValue(pixKey.getValue());
         pixKeyJpa.setAccount(accountJpa);
-
+        pixKeyJpa.setStatus(Status.ACTIVE.name());
         return pixKeyJpa;
     }
 

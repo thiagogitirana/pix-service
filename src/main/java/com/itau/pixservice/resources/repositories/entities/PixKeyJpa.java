@@ -1,11 +1,12 @@
 package com.itau.pixservice.resources.repositories.entities;
 
+import com.itau.pixservice.domain.entities.enums.Status;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,6 +16,8 @@ import static com.itau.pixservice.domain.constants.EntitiesSize.KEY_VALUE_SIZE;
 @Entity
 @Table(name = "PIX_KEY")
 @Data
+@SQLDelete(sql = "UPDATE PIX_KEY set STATUS = 'INACTIVE', UPDATED_AT = CURRENT_TIMESTAMP where PIX_KEY_ID=?")
+@Where(clause = "STATUS = 'ACTIVE'")
 public class PixKeyJpa implements Serializable {
 
     @Id
@@ -43,11 +46,13 @@ public class PixKeyJpa implements Serializable {
     @JoinColumn(name = "ACCOUNT_ID")
     private AccountJpa account;
 
+    @Column(name = "STATUS")
+    private String status;
+
     @Column(name = "CREATED_AT")
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name = "UPDATED_AT")
-    @UpdateTimestamp
     private LocalDateTime updatedAt;
 }

@@ -46,4 +46,14 @@ public class PixController {
 
         return ResponseEntity.ok().body(responseDTO);
     }
+
+    @DeleteMapping(value = "/{pixKeyId}")
+    public ResponseEntity<PixResponseDTO> deleteById(@PathVariable String pixKeyId) {
+
+        PixResponse response = pixService.remove(pixKeyId);
+
+        PixResponseDTO responseDTO = modelMapper.map(response, PixResponseDTO.class);
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }

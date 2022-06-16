@@ -1,6 +1,8 @@
 package com.itau.pixservice.resources.repositories;
 
 import com.itau.pixservice.domain.entities.PixResponse;
+import com.itau.pixservice.domain.entities.enums.Status;
+import com.itau.pixservice.domain.exceptions.InvalidParamiterException;
 import com.itau.pixservice.domain.exceptions.NotFoundException;
 import com.itau.pixservice.domain.gateways.repositories.PixKeyRepository;
 import com.itau.pixservice.resources.repositories.adapters.PixKeyAdapter;
@@ -9,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class PixKeyRepositoryImpl implements PixKeyRepository {
@@ -29,12 +33,37 @@ public class PixKeyRepositoryImpl implements PixKeyRepository {
 
     @Override
     public PixResponse findById(String id) {
-        List<PixKeyJpa> lista = pixKeyDao.find(id, null,null, null, null,
+        List<PixKeyJpa> lista = pixKeyDao.find(id, null, null, null, null,
                 null, null);
 
         if (!lista.isEmpty()) {
             return pixKeyAdapter.toResponse(lista.stream().findFirst().get());
-        }else {
+        } else {
+            throw new NotFoundException("Chave pix não encontrada");
+        }
+    }
+
+    @Override
+    public PixResponse remove(String id) {
+
+        Optional<PixKeyJpa> savedPixKey = pixKeyRepositoryJpa.findBypixKeyId(UUID.fromString(id));
+
+        if (savedPixKey.isPresent()) {
+            PixKeyJpa pix = savedPixKey.get();
+
+            if (pix.getStatus().equals(Status.INACTIVE.name())) {
+                throw new InvalidParamiterException("A chave já esta desativada");
+            }
+
+            pixKeyRepositoryJpa.deleteByPixKeyId(UUID.fromString(id));
+            savedPixKey = pixKeyRepositoryJpa.findBypixKeyId(UUID.fromString(id));
+
+            if (savedPixKey.isPresent()) {
+                return pixKeyAdapter.toResponse(savedPixKey.get());
+            } else {
+                throw new NotFoundException("Chave pix não encontrada");
+            }
+        } else {
             throw new NotFoundException("Chave pix não encontrada");
         }
     }
