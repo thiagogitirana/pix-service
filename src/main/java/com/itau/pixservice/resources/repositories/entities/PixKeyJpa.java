@@ -43,7 +43,7 @@ public class PixKeyJpa implements Serializable {
     @JoinColumn(name = "ACCOUNT_ID")
     private AccountJpa account;
 
-    @Column(name = "CREATED_AT", nullable = false)
+    @Column(name = "CREATED_AT")
     @CreationTimestamp
     private LocalDateTime createdAt;
 

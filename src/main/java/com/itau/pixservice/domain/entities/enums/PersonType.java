@@ -4,12 +4,13 @@ import lombok.Getter;
 
 @Getter
 public enum PersonType {
-    PF("F"),
-    PJ("J");
+    F("F"),
+    J("J");
 
     private String description;
 
     PersonType(String description) {
         this.description = description;
     }
+
 }

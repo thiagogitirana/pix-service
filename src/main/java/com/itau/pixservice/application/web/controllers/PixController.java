@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.OK;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/pix")
@@ -18,20 +19,22 @@ public class PixController {
 
     @Autowired
     private PixService pixService;
-
     @Autowired
     private ModelMapper modelMapper;
 
     @PostMapping
-    public ResponseEntity<Void> addPix(@RequestBody ClientDTO client) {
+    public ResponseEntity<List<PixResponseDTO>> addPix(@RequestBody ClientDTO client) {
 
-        Client clientDomain = null;
+        Client clientDomain = modelMapper.map(client, Client.class);
 
-        clientDomain = modelMapper.map(client, Client.class);
+        List<PixResponse> pixs = pixService.save(clientDomain);
 
-        pixService.save(clientDomain);
+        List<PixResponseDTO> response = pixs
+                .stream()
+                .map(pix -> modelMapper.map(pix, PixResponseDTO.class))
+                .collect(Collectors.toList());
 
-        return new ResponseEntity(OK);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping(value = "/findById/{pixKeyId}")

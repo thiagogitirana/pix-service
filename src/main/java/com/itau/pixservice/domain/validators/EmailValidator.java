@@ -1,10 +1,11 @@
 package com.itau.pixservice.domain.validators;
 
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Component
 public class EmailValidator {
@@ -12,7 +13,7 @@ public class EmailValidator {
     private static int EMAIL_SIZE = 77;
 
     public boolean isValid(String email) {
-        if (!StringUtils.hasText(email)) {
+        if (isBlank(email)) {
             return false;
         }
 

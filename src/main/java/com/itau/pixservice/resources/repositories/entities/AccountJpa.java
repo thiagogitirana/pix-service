@@ -40,7 +40,7 @@ public class AccountJpa implements Serializable {
     @JoinColumn(name = "CLIENT_ID")
     private ClientJpa client;
 
-    @Column(name = "CREATED_AT", nullable = false)
+    @Column(name = "CREATED_AT")
     @CreationTimestamp
     private LocalDateTime createdAt;
 

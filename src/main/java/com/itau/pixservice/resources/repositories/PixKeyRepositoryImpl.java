@@ -8,7 +8,7 @@ import com.itau.pixservice.resources.repositories.entities.PixKeyJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.List;
 
 @Component
 public class PixKeyRepositoryImpl implements PixKeyRepository {
@@ -19,6 +19,9 @@ public class PixKeyRepositoryImpl implements PixKeyRepository {
     @Autowired
     private PixKeyAdapter pixKeyAdapter;
 
+    @Autowired
+    private PixKeyDao pixKeyDao;
+
     @Override
     public boolean exists(String key) {
         return pixKeyRepositoryJpa.existsByValue(key);
@@ -26,11 +29,11 @@ public class PixKeyRepositoryImpl implements PixKeyRepository {
 
     @Override
     public PixResponse findById(String id) {
+        List<PixKeyJpa> lista = pixKeyDao.find(id, null,null, null, null,
+                null, null);
 
-        Optional<PixKeyJpa> response = pixKeyRepositoryJpa.findBypixKeyId(id);
-
-        if (response.isPresent()) {
-            return pixKeyAdapter.toResponse(response.get());
+        if (!lista.isEmpty()) {
+            return pixKeyAdapter.toResponse(lista.stream().findFirst().get());
         }else {
             throw new NotFoundException("Chave pix não encontrada");
         }

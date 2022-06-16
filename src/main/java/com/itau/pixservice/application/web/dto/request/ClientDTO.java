@@ -1,5 +1,6 @@
 package com.itau.pixservice.application.web.dto.request;
 
+import com.itau.pixservice.domain.entities.enums.PersonType;
 import lombok.Data;
 
 import java.util.List;
@@ -9,6 +10,6 @@ public class ClientDTO {
 
     private String firstName;
     private String lastName;
-    private String personType;
+    private PersonType personType;
     private List<AccountDTO> accounts;
 }

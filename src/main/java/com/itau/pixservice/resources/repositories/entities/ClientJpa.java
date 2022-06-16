@@ -36,7 +36,7 @@ public class ClientJpa implements Serializable {
     @OneToMany(mappedBy = "client", cascade = ALL, fetch = LAZY)
     private List<AccountJpa> accounts;
 
-    @Column(name = "CREATED_AT", nullable = false)
+    @Column(name = "CREATED_AT")
     @CreationTimestamp
     private LocalDateTime createdAt;
 

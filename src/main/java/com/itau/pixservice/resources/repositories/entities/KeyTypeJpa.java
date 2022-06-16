@@ -25,7 +25,7 @@ public class KeyTypeJpa implements Serializable {
     @Column(name = "DESCRIPTION", nullable = false, length = KEY_TYPE_DESCRIPTION_SIZE)
     private String description;
 
-    @Column(name = "CREATED_AT", nullable = false)
+    @Column(name = "CREATED_AT")
     @CreationTimestamp
     private LocalDateTime createdAt;
 
