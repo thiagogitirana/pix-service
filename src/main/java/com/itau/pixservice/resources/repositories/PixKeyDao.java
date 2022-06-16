@@ -1,8 +1,11 @@
 package com.itau.pixservice.resources.repositories;
 
+import com.itau.pixservice.domain.entities.enums.KeyType;
+import com.itau.pixservice.resources.repositories.adapters.KeyTypeAdapter;
 import com.itau.pixservice.resources.repositories.entities.AccountJpa;
 import com.itau.pixservice.resources.repositories.entities.ClientJpa;
 import com.itau.pixservice.resources.repositories.entities.PixKeyJpa;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -30,6 +33,8 @@ public class PixKeyDao {
     private Predicate createdAtPredicate;
     private Predicate updatedAtPredicate;
     private List<Predicate> predicates;
+    @Autowired
+    private KeyTypeAdapter keyTypeAdapter;
 
     public List<PixKeyJpa> find(String id, String tipoChave, Integer agencia, Integer conta, String nome,
                                 LocalDateTime inclusao, LocalDateTime inativacao) {
@@ -83,7 +88,7 @@ public class PixKeyDao {
 
     private void buildKeyType(CriteriaBuilder criteriaBuilder, Root<PixKeyJpa> pixKeyJpaRoot, String tipoChave) {
         if (isNotBlank(tipoChave)) {
-            keyTypePredicate = criteriaBuilder.equal(pixKeyJpaRoot.get("keyType"), tipoChave);
+            keyTypePredicate = criteriaBuilder.equal(pixKeyJpaRoot.get("keyType"), keyTypeAdapter.toJpa(KeyType.valueOf(tipoChave)));
             predicates.add(keyTypePredicate);
         }
 
@@ -112,7 +117,7 @@ public class PixKeyDao {
 
     private void buildCreatedAt(CriteriaBuilder criteriaBuilder, Root<PixKeyJpa> pixKeyJpaRoot, LocalDateTime inclusao) {
         if (inclusao != null) {
-            createdAtPredicate = criteriaBuilder.equal(pixKeyJpaRoot.get("createdAt"), inclusao);
+            createdAtPredicate = criteriaBuilder.greaterThanOrEqualTo(pixKeyJpaRoot.get("createdAt"), inclusao);
             predicates.add(createdAtPredicate);
         }
 
@@ -120,7 +125,7 @@ public class PixKeyDao {
 
     private void buildUpdatedAt(CriteriaBuilder criteriaBuilder, Root<PixKeyJpa> pixKeyJpaRoot, LocalDateTime inativacao) {
         if (inativacao != null) {
-            updatedAtPredicate = criteriaBuilder.equal(pixKeyJpaRoot.get("updatedAt"), inativacao);
+            updatedAtPredicate = criteriaBuilder.greaterThanOrEqualTo(pixKeyJpaRoot.get("updatedAt"), inativacao);
             predicates.add(updatedAtPredicate);
         }
     }

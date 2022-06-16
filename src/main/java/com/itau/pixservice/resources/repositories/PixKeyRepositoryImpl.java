@@ -10,9 +10,14 @@ import com.itau.pixservice.resources.repositories.entities.PixKeyJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Component
 public class PixKeyRepositoryImpl implements PixKeyRepository {
@@ -66,5 +71,29 @@ public class PixKeyRepositoryImpl implements PixKeyRepository {
         } else {
             throw new NotFoundException("Chave pix não encontrada");
         }
+    }
+
+    @Override
+    public List<PixResponse> find(String id, String keyType, Integer branch, Integer account, String name, String insertDate, String deleteDate) {
+
+        LocalDateTime deleteDateTime = getLocalDateTime(deleteDate);
+        LocalDateTime insertDateTime = getLocalDateTime(insertDate);
+
+        List<PixKeyJpa> pixKeyJpaList = pixKeyDao.find(id, keyType, branch, account, name,
+                insertDateTime, deleteDateTime);
+
+        if (pixKeyJpaList == null || pixKeyJpaList.isEmpty()) {
+            throw new NotFoundException("Chave pix não encontrada");
+        }
+
+        return pixKeyJpaList.stream().map(pix -> pixKeyAdapter.toResponse(pix)).collect(Collectors.toList());
+    }
+
+    private LocalDateTime getLocalDateTime(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        if (isNotBlank(date)) {
+            return LocalDateTime.parse(date, formatter);
+        }
+        return null;
     }
 }

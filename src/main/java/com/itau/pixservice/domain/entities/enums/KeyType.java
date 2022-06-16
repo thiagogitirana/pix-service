@@ -2,6 +2,8 @@ package com.itau.pixservice.domain.entities.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum KeyType{
 
